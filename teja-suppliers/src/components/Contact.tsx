@@ -27,12 +27,50 @@ export function Contact() {
     e.preventDefault();
     const errs = validate();
     if (Object.keys(errs).length) { setErrors(errs); return; }
+    
+    const accessKey = process.env.NEXT_PUBLIC_WEB3FORMS_KEY || "YOUR_WEB3FORMS_ACCESS_KEY_HERE";
+    if (accessKey === "YOUR_WEB3FORMS_ACCESS_KEY_HERE") {
+      alert("Inquiry Form setup is incomplete!\n\nTo receive inquiries at your email in production, please register a free access key at https://web3forms.com and add it as NEXT_PUBLIC_WEB3FORMS_KEY in your .env file or project configurations.");
+      return;
+    }
+
     setErrors({});
     setStatus("loading");
-    // Simulate API call
-    await new Promise(r => setTimeout(r, 1800));
-    setStatus("success");
+
+    try {
+      const response = await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({
+          access_key: accessKey,
+          name: form.name,
+          phone: form.phone,
+          company: form.company,
+          email: form.email,
+          product: form.product,
+          quantity: form.quantity,
+          message: form.message,
+          subject: `New Inquiry from ${form.name} (${form.company || "Individual"})`,
+        }),
+      });
+
+      const result = await response.json();
+      if (result.success) {
+        setStatus("success");
+      } else {
+        alert("Submission failed: " + (result.message || "Please check your access key."));
+        setStatus("idle");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Failed to submit inquiry. Please check your network connection.");
+      setStatus("idle");
+    }
   };
+
 
   const field = (id: keyof typeof form, label: string, type = "text", placeholder = "") => (
     <div className="flex flex-col gap-1.5">
@@ -92,7 +130,7 @@ export function Contact() {
             <div className="rounded-2xl overflow-hidden border border-gray-200 dark:border-white/8 shadow-lg">
               <iframe
                 title="Teja Suppliers location – Adilabad, Telangana"
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d121256.6!2d78.5321!3d19.6641!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bcd1a5af5afafaf%3A0x1234567890!2sAdilabad%2C%20Telangana!5e0!3m2!1sen!2sin!4v1700000000000!5m2!1sen!2sin"
+                src="https://maps.google.com/maps?q=Industrial%20Area,%20Adilabad,%20Telangana,%20India&t=&z=15&ie=UTF8&iwloc=&output=embed"
                 width="100%" height="200" style={{ border: 0 }} allowFullScreen loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
               />

@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Menu, X, FlaskConical } from "lucide-react";
 import { ThemeToggle } from "./ThemeToggle";
 import { motion, AnimatePresence } from "framer-motion";
+import { usePathname, useRouter } from "next/navigation";
 
 const NAV_LINKS = [
   { label: "Home",     href: "#hero" },
@@ -17,6 +18,8 @@ export function Navbar() {
   const [scrolled, setScrolled]   = useState(false);
   const [menuOpen, setMenuOpen]   = useState(false);
   const [active, setActive]       = useState("Home");
+  const pathname = usePathname();
+  const router = useRouter();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 60);
@@ -27,8 +30,12 @@ export function Navbar() {
   const handleNav = (label: string, href: string) => {
     setActive(label);
     setMenuOpen(false);
-    const el = document.querySelector(href);
-    if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+    if (pathname === "/") {
+      const el = document.querySelector(href);
+      if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+    } else {
+      router.push("/" + href);
+    }
   };
 
   return (

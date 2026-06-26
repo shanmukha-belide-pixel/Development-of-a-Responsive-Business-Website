@@ -1,14 +1,23 @@
 "use client";
 import { motion } from "framer-motion";
 import { FlaskConical, Phone, Mail, MapPin, MessageCircle } from "lucide-react";
+import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
 
 const QUICK_LINKS = ["Home","About","Products","Why Us","Contact"];
 const PRODUCTS    = ["Industrial Solvents","Acids & Bases","Industrial Salts","AR/LR Reagents","HPLC Solvents","Specialty Chemicals"];
 
 export function Footer() {
   const year = new Date().getFullYear();
+  const pathname = usePathname();
+  const router = useRouter();
+
   const scroll = (id: string) => {
-    document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+    if (pathname === "/") {
+      document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+    } else {
+      router.push("/#" + id);
+    }
   };
 
   return (
@@ -33,8 +42,6 @@ export function Footer() {
             <div className="flex gap-3">
               {[
                 { icon: "W", label: "WhatsApp", href: "https://wa.me/917780789865", bg: "bg-green-600" },
-                { icon: "in", label: "LinkedIn", href: "#", bg: "bg-blue-700" },
-                { icon: "f", label: "Facebook", href: "#", bg: "bg-blue-600" },
               ].map((s) => (
                 <a key={s.label} href={s.href} aria-label={s.label} target="_blank" rel="noopener noreferrer"
                    className={`w-9 h-9 ${s.bg} rounded-lg flex items-center justify-center text-white text-xs font-bold hover:scale-110 transition-transform duration-200`}>
@@ -106,8 +113,12 @@ export function Footer() {
             &copy; {year} <span className="text-blue-400">Teja Suppliers</span>. All rights reserved. Adilabad, Telangana.
           </p>
           <div className="flex gap-4">
-            <a href="#" className="text-gray-500 hover:text-blue-400 text-xs transition-colors">Privacy Policy</a>
-            <a href="#" className="text-gray-500 hover:text-blue-400 text-xs transition-colors">Terms of Use</a>
+            <Link href="/privacy" className="text-gray-500 hover:text-blue-400 text-xs transition-colors">
+              Privacy Policy
+            </Link>
+            <Link href="/terms" className="text-gray-500 hover:text-blue-400 text-xs transition-colors">
+              Terms of Use
+            </Link>
           </div>
         </div>
       </div>
