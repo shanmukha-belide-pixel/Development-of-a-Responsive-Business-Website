@@ -95,8 +95,16 @@ export function Navbar() {
               ))}
             </ul>
 
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-4">
               <ThemeToggle />
+              <Link
+                href="/login"
+                className={`hidden md:inline-block text-sm font-semibold transition-colors duration-300 ${
+                  scrolled ? "text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400" : "text-white/80 hover:text-white"
+                }`}
+              >
+                Sign In
+              </Link>
               <button
                 onClick={() => handleNav("Contact","#contact")}
                 className="hidden md:flex items-center gap-2 px-5 py-2.5 rounded-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 text-white text-sm font-semibold transition-all duration-300 btn-glow hover:scale-105"
@@ -143,7 +151,19 @@ export function Navbar() {
             <motion.button
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.5 }}
+              transition={{ delay: NAV_LINKS.length * 0.08 }}
+              onClick={() => {
+                setMenuOpen(false);
+                router.push("/login");
+              }}
+              className="text-3xl font-bold text-white/80 hover:text-blue-400 transition-colors"
+            >
+              Sign In
+            </motion.button>
+            <motion.button
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: (NAV_LINKS.length + 1) * 0.08 }}
               onClick={() => handleNav("Contact","#contact")}
               className="mt-4 px-8 py-3 rounded-full bg-gradient-to-r from-blue-600 to-blue-700 text-white font-bold text-lg btn-glow"
             >

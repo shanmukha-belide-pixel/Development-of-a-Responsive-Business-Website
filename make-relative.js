@@ -6,7 +6,8 @@ const files = [
   '404.html', 
   '_not-found/index.html',
   'privacy/index.html',
-  'terms/index.html'
+  'terms/index.html',
+  'login/index.html'
 ];
 const search = '/Development-of-a-Responsive-Business-Website/';
 
