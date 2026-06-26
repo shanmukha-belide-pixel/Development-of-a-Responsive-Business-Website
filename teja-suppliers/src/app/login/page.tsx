@@ -65,7 +65,8 @@ export default function LoginPage() {
       .then((res) => res.json())
       .then((data) => {
         const cid = data.googleClientId || process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
-        if (cid && typeof window !== "undefined") {
+        const isPlaceholder = cid && cid.includes("YOUR_ACTUAL_CLIENT_ID_HERE");
+        if (cid && !isPlaceholder && typeof window !== "undefined") {
           let retries = 0;
           const initGsi = () => {
             const win = window as any;
@@ -95,7 +96,8 @@ export default function LoginPage() {
       .catch((err) => {
         console.warn("Could not load runtime config.json, using build environment client ID if any:", err);
         const cid = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
-        if (cid && typeof window !== "undefined") {
+        const isPlaceholder = cid && cid.includes("YOUR_ACTUAL_CLIENT_ID_HERE");
+        if (cid && !isPlaceholder && typeof window !== "undefined") {
           let retries = 0;
           const initGsi = () => {
             const win = window as any;
