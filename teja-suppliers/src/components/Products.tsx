@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
+import { getAssetPath } from "@/utils/path";
 import { ArrowRight, CheckCircle2 } from "lucide-react";
 
 const CATEGORIES = ["All", "Industrial", "Laboratory", "Specialty"];
@@ -103,7 +104,7 @@ export function Products() {
                 className="glass-card rounded-2xl overflow-hidden card-hover group"
               >
                 <div className="relative aspect-[4/3] overflow-hidden">
-                  <Image src={p.img} alt={p.title} fill className="object-cover transition-transform duration-700 group-hover:scale-105" />
+                  <Image src={getAssetPath(p.img)} alt={p.title} fill className="object-cover transition-transform duration-700 group-hover:scale-105" />
                   <div className="absolute inset-0 bg-gradient-to-t from-gray-900/60 to-transparent" />
                   <span className="absolute top-3 left-3 px-3 py-1 rounded-full text-xs font-bold bg-gray-950/70 backdrop-blur-sm text-blue-300 border border-blue-500/30">
                     {p.tag}

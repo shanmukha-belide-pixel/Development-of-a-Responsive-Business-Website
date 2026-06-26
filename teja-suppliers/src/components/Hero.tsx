@@ -2,6 +2,7 @@
 import { motion } from "framer-motion";
 import { ArrowRight, Phone, ShieldCheck, Truck, FlaskConical } from "lucide-react";
 import Image from "next/image";
+import { getAssetPath } from "@/utils/path";
 
 const STATS = [
   { num: "15+",  label: "Years Experience" },
@@ -23,7 +24,7 @@ export function Hero() {
     <section id="hero" className="relative min-h-screen flex items-center overflow-hidden">
       {/* Background image */}
       <div className="absolute inset-0 z-0">
-        <Image src="/images/hero.png" alt="Teja Suppliers chemical warehouse" fill className="object-cover object-center" priority />
+        <Image src={getAssetPath("/images/hero.png")} alt="Teja Suppliers chemical warehouse" fill className="object-cover object-center" priority />
         <div className="absolute inset-0 bg-gradient-to-r from-gray-950/95 via-gray-950/80 to-blue-950/60" />
         <div className="absolute inset-0 bg-gradient-to-t from-gray-950/80 via-transparent to-transparent" />
       </div>
@@ -84,7 +85,7 @@ export function Hero() {
               View Products
               <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
             </button>
-            <a href="tel:+917780789865"
+            <a href="tel:7780789865"
               className="flex items-center gap-2.5 px-7 py-3.5 rounded-full glass text-white font-semibold hover:bg-white/15 transition-all duration-300 border border-white/20">
               <Phone size={18} /> Call Now
             </a>

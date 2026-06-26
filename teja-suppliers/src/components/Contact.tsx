@@ -69,7 +69,7 @@ export function Contact() {
             <div className="space-y-5 mb-8">
               {[
                 { icon: <MapPin size={18}/>, title: "Address", content: "Industrial Area, Adilabad – 504001, Telangana, India" },
-                { icon: <Phone size={18}/>, title: "Phone", content: "+91 77807 89865", href: "tel:+917780789865" },
+                { icon: <Phone size={18}/>, title: "Phone", content: "7780789865", href: "tel:7780789865" },
                 { icon: <Mail size={18}/>, title: "Email", content: "info@tejasuppliers.com", href: "mailto:info@tejasuppliers.com" },
                 { icon: <Clock size={18}/>, title: "Hours", content: "Mon–Sat: 8AM–7PM  |  Sun: 9AM–2PM" },
               ].map((item) => (
@@ -114,15 +114,15 @@ export function Contact() {
                   </div>
                   <h3 className="font-bold text-xl text-gray-900 dark:text-white">Inquiry Sent!</h3>
                   <p className="text-gray-500 dark:text-gray-400 text-sm max-w-xs">Our team will contact you within 24 hours. For urgent needs, call us directly.</p>
-                  <a href="tel:+917780789865" className="flex items-center gap-2 px-6 py-3 rounded-full border-2 border-blue-500 text-blue-500 font-semibold hover:bg-blue-500 hover:text-white transition-all duration-300">
-                    <Phone size={16} /> +91 77807 89865
+                  <a href="tel:7780789865" className="flex items-center gap-2 px-6 py-3 rounded-full border-2 border-blue-500 text-blue-500 font-semibold hover:bg-blue-500 hover:text-white transition-all duration-300">
+                    <Phone size={16} /> 7780789865
                   </a>
                 </motion.div>
               ) : (
                 <form onSubmit={handleSubmit} className="space-y-4" noValidate>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     {field("name",    "Full Name *",    "text",  "Your full name")}
-                    {field("phone",   "Phone *",        "tel",   "+91 XXXXX XXXXX")}
+                    {field("phone",   "Phone *",        "tel",   "7780789865")}
                   </div>
                   {field("company", "Company / Organisation", "text", "Your company name")}
                   {field("email",   "Email Address",          "email","your@email.com")}

@@ -1,6 +1,7 @@
 "use client";
 import { motion } from "framer-motion";
 import Image from "next/image";
+import { getAssetPath } from "@/utils/path";
 import { ShieldCheck, FlaskConical, Truck, Award } from "lucide-react";
 
 const FEATURES = [
@@ -26,7 +27,7 @@ export function About() {
             className="relative"
           >
             <div className="relative aspect-[4/5] rounded-3xl overflow-hidden shadow-2xl shadow-blue-900/20">
-              <Image src="/images/about.png" alt="Teja Suppliers QC lab team" fill className="object-cover" />
+              <Image src={getAssetPath("/images/about.png")} alt="Teja Suppliers QC lab team" fill className="object-cover" />
               <div className="absolute inset-0 bg-gradient-to-t from-gray-950/40 to-transparent" />
             </div>
             {/* Badge */}
