@@ -5,6 +5,7 @@ import Link from "next/link";
 import { User, Lock, ArrowLeft, Loader2, CheckCircle2, ShieldAlert, Mail } from "lucide-react";
 import { getAssetPath } from "@/utils/path";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import Script from "next/script";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -23,8 +24,69 @@ export default function LoginPage() {
   const [isGoogleCustomMode, setIsGoogleCustomMode] = useState(false);
   const [mounted, setMounted] = useState(false);
 
+  const decodeJwt = (token: string) => {
+    try {
+      const base64Url = token.split(".")[1];
+      const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+      const jsonPayload = decodeURIComponent(
+        atob(base64)
+          .split("")
+          .map((c) => "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2))
+          .join("")
+      );
+      return JSON.parse(jsonPayload);
+    } catch (e) {
+      console.error("Error decoding Google JWT token", e);
+      return null;
+    }
+  };
+
+  const handleGoogleCredentialResponse = (response: any) => {
+    try {
+      const payload = decodeJwt(response.credential);
+      if (payload && payload.name && payload.email) {
+        handleGoogleLogin(payload.name, payload.email);
+      } else {
+        setStatus("error");
+        setErrorMessage("Unable to retrieve profile information from Google.");
+      }
+    } catch (e) {
+      console.error(e);
+      setStatus("error");
+      setErrorMessage("Google Authentication failed.");
+    }
+  };
+
   useEffect(() => {
     setMounted(true);
+
+    const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
+    if (clientId && typeof window !== "undefined") {
+      let retries = 0;
+      const initGsi = () => {
+        const win = window as any;
+        if (win.google?.accounts?.id) {
+          try {
+            win.google.accounts.id.initialize({
+              client_id: clientId,
+              callback: handleGoogleCredentialResponse,
+            });
+            win.google.accounts.id.renderButton(
+              document.getElementById("btn-google-login-container"),
+              { theme: "outline", size: "large", width: 380 }
+            );
+            document.getElementById("btn-google-login")?.classList.add("hidden");
+            document.getElementById("btn-google-login-container-wrapper")?.classList.remove("hidden");
+          } catch (e) {
+            console.error("Failed to initialize Google Sign In SDK:", e);
+          }
+        } else if (retries < 30) {
+          retries++;
+          setTimeout(initGsi, 100);
+        }
+      };
+      initGsi();
+    }
   }, []);
 
   const validate = () => {
@@ -142,7 +204,9 @@ export default function LoginPage() {
   };
 
   return (
-    <main className="relative min-h-screen bg-gray-50 dark:bg-gray-950 flex items-center justify-center p-4 overflow-hidden">
+    <>
+      <Script src="https://accounts.google.com/gsi/client" strategy="afterInteractive" />
+      <main className="relative min-h-screen bg-gray-50 dark:bg-gray-950 flex items-center justify-center p-4 overflow-hidden">
       {/* Background blobs */}
       <div className="absolute top-0 left-0 w-[500px] h-[500px] bg-blue-600/5 dark:bg-blue-500/5 rounded-full blur-3xl pointer-events-none -translate-x-1/2 -translate-y-1/2" />
       <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-cyan-600/5 dark:bg-cyan-500/5 rounded-full blur-3xl pointer-events-none translate-x-1/2 translate-y-1/2" />
@@ -364,6 +428,11 @@ export default function LoginPage() {
                 <div className="w-full border-t border-gray-200 dark:border-white/5"></div>
               </div>
               <span className="relative bg-white dark:bg-gray-900 px-4 text-[10px] uppercase tracking-wider text-gray-400 font-bold">Or continue with</span>
+            </div>
+
+            {/* Google Container (for official button, shown only online if Client ID is configured) */}
+            <div id="btn-google-login-container-wrapper" className="hidden flex justify-center w-full min-h-[44px]">
+              <div id="btn-google-login-container" className="w-full"></div>
             </div>
 
             <button
@@ -832,5 +901,6 @@ export default function LoginPage() {
         }}
       />
     </main>
+  </>
   );
 }
