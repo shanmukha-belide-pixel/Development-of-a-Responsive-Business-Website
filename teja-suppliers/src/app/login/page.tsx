@@ -41,6 +41,7 @@ export default function LoginPage() {
 
     // Simulated test credentials
     if (username.trim() === "Shanmukha" && password === "Shanmukha29*") {
+      localStorage.setItem("isLoggedIn", "true");
       setStatus("success");
       setTimeout(() => {
         router.push("/");

@@ -1,7 +1,8 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { MapPin, Phone, Mail, Clock, Send, CheckCircle2, Loader2 } from "lucide-react";
+import Link from "next/link";
 
 const PRODUCTS_LIST = [
   { group: "Industrial Chemicals", items: ["Industrial Solvents","Acids & Bases","Industrial Salts","Other Industrial"] },
@@ -13,6 +14,11 @@ export function Contact() {
   const [status, setStatus] = useState<"idle"|"loading"|"success">("idle");
   const [form, setForm] = useState({ name:"", phone:"", company:"", email:"", product:"", quantity:"", message:"" });
   const [errors, setErrors] = useState<Record<string,string>>({});
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    setIsLoggedIn(localStorage.getItem("isLoggedIn") === "true");
+  }, []);
 
   const validate = () => {
     const e: Record<string,string> = {};
@@ -141,63 +147,82 @@ export function Contact() {
           <motion.div initial={{ opacity: 0, x: 32 }} whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }} className="lg:col-span-3">
             <div className="bg-gray-50 dark:bg-gray-900/60 border border-gray-200 dark:border-white/8 rounded-3xl p-8 md:p-10">
-              <h3 className="font-sans font-bold text-2xl text-gray-900 dark:text-white mb-1">Send an Inquiry</h3>
-              <p className="text-gray-500 dark:text-gray-400 text-sm mb-8">Fill out the form and we&apos;ll respond within 24 hours.</p>
-
-              {status === "success" ? (
-                <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }}
-                  className="flex flex-col items-center text-center py-12 gap-4">
-                  <div className="w-20 h-20 rounded-full bg-green-500/15 border-2 border-green-500 flex items-center justify-center">
-                    <CheckCircle2 size={36} className="text-green-400" />
+              {!isLoggedIn ? (
+                <div className="flex flex-col items-center text-center py-10 gap-6">
+                  <div className="w-16 h-16 rounded-full bg-blue-500/15 border border-blue-500/25 flex items-center justify-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" className="lucide lucide-lock text-blue-500"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
                   </div>
-                  <h3 className="font-bold text-xl text-gray-900 dark:text-white">Inquiry Sent!</h3>
-                  <p className="text-gray-500 dark:text-gray-400 text-sm max-w-xs">Our team will contact you within 24 hours. For urgent needs, call us directly.</p>
-                  <a href="tel:7780789865" className="flex items-center gap-2 px-6 py-3 rounded-full border-2 border-blue-500 text-blue-500 font-semibold hover:bg-blue-500 hover:text-white transition-all duration-300">
-                    <Phone size={16} /> 7780789865
-                  </a>
-                </motion.div>
+                  <div>
+                    <h3 className="font-sans font-bold text-2xl text-gray-900 dark:text-white mb-2">Sign In to Request Quote</h3>
+                    <p className="text-gray-500 dark:text-gray-400 text-sm max-w-sm leading-relaxed">
+                      To submit inquiries, request pricing quotes, and access the supplier catalog, please sign in with your account.
+                    </p>
+                  </div>
+                  <Link href="/login" className="px-8 py-3.5 rounded-xl bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 text-white font-bold text-sm transition-all duration-300 btn-glow hover:scale-[1.02]">
+                    Sign In Now
+                  </Link>
+                </div>
               ) : (
-                <form onSubmit={handleSubmit} className="space-y-4" noValidate>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    {field("name",    "Full Name *",    "text",  "Your full name")}
-                    {field("phone",   "Phone *",        "tel",   "7780789865")}
-                  </div>
-                  {field("company", "Company / Organisation", "text", "Your company name")}
-                  {field("email",   "Email Address",          "email","your@email.com")}
+                <>
+                  <h3 className="font-sans font-bold text-2xl text-gray-900 dark:text-white mb-1">Send an Inquiry</h3>
+                  <p className="text-gray-500 dark:text-gray-400 text-sm mb-8">Fill out the form and we&apos;ll respond within 24 hours.</p>
 
-                  <div className="flex flex-col gap-1.5">
-                    <label htmlFor="product" className="text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">Chemical Category *</label>
-                    <select id="product" value={form.product} onChange={e => setForm(p => ({...p, product: e.target.value}))}
-                      className={`w-full bg-gray-50 dark:bg-gray-800/60 border rounded-xl px-4 py-3 text-sm text-gray-900 dark:text-white outline-none transition-all duration-200 focus:ring-2 focus:ring-blue-500/40 focus:border-blue-500 ${errors.product ? "border-red-400" : "border-gray-200 dark:border-white/10"}`}>
-                      <option value="" disabled>Select chemical category</option>
-                      {PRODUCTS_LIST.map(g => (
-                        <optgroup key={g.group} label={g.group}>
-                          {g.items.map(i => <option key={i} value={i}>{i}</option>)}
-                        </optgroup>
-                      ))}
-                    </select>
-                    {errors.product && <p className="text-red-400 text-xs">{errors.product}</p>}
-                  </div>
+                  {status === "success" ? (
+                    <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }}
+                      className="flex flex-col items-center text-center py-12 gap-4">
+                      <div className="w-20 h-20 rounded-full bg-green-500/15 border-2 border-green-500 flex items-center justify-center">
+                        <CheckCircle2 size={36} className="text-green-400" />
+                      </div>
+                      <h3 className="font-bold text-xl text-gray-900 dark:text-white">Inquiry Sent!</h3>
+                      <p className="text-gray-500 dark:text-gray-400 text-sm max-w-xs">Our team will contact you within 24 hours. For urgent needs, call us directly.</p>
+                      <a href="tel:7780789865" className="flex items-center gap-2 px-6 py-3 rounded-full border-2 border-blue-500 text-blue-500 font-semibold hover:bg-blue-500 hover:text-white transition-all duration-300">
+                        <Phone size={16} /> 7780789865
+                      </a>
+                    </motion.div>
+                  ) : (
+                    <form onSubmit={handleSubmit} className="space-y-4" noValidate>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        {field("name",    "Full Name *",    "text",  "Your full name")}
+                        {field("phone",   "Phone *",        "tel",   "7780789865")}
+                      </div>
+                      {field("company", "Company / Organisation", "text", "Your company name")}
+                      {field("email",   "Email Address",          "email","your@email.com")}
 
-                  {field("quantity","Chemical Name & Quantity","text","e.g. Acetone – 500L, H₂SO₄ – 200L drum")}
+                      <div className="flex flex-col gap-1.5">
+                        <label htmlFor="product" className="text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">Chemical Category *</label>
+                        <select id="product" value={form.product} onChange={e => setForm(p => ({...p, product: e.target.value}))}
+                          className={`w-full bg-gray-50 dark:bg-gray-800/60 border rounded-xl px-4 py-3 text-sm text-gray-900 dark:text-white outline-none transition-all duration-200 focus:ring-2 focus:ring-blue-500/40 focus:border-blue-500 ${errors.product ? "border-red-400" : "border-gray-200 dark:border-white/10"}`}>
+                          <option value="" disabled>Select chemical category</option>
+                          {PRODUCTS_LIST.map(g => (
+                            <optgroup key={g.group} label={g.group}>
+                              {g.items.map(i => <option key={i} value={i}>{i}</option>)}
+                            </optgroup>
+                          ))}
+                        </select>
+                        {errors.product && <p className="text-red-400 text-xs">{errors.product}</p>}
+                      </div>
 
-                  <div className="flex flex-col gap-1.5">
-                    <label htmlFor="message" className="text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">Special Requirements</label>
-                    <textarea id="message" rows={4} value={form.message}
-                      onChange={e => setForm(p => ({...p, message: e.target.value}))}
-                      placeholder="Purity grade, packaging preference, delivery location, timeline..."
-                      className="w-full bg-gray-50 dark:bg-gray-800/60 border border-gray-200 dark:border-white/10 rounded-xl px-4 py-3 text-sm text-gray-900 dark:text-white placeholder-gray-400 outline-none transition-all duration-200 focus:ring-2 focus:ring-blue-500/40 focus:border-blue-500 resize-none"
-                    />
-                  </div>
+                      {field("quantity","Chemical Name & Quantity","text","e.g. Acetone – 500L, H₂SO₄ – 200L drum")}
 
-                  <button type="submit" disabled={status === "loading"}
-                    className="w-full flex items-center justify-center gap-2.5 py-4 rounded-2xl bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 text-white font-bold text-base transition-all duration-300 btn-glow disabled:opacity-70 disabled:cursor-not-allowed hover:scale-[1.02]">
-                    {status === "loading"
-                      ? <><Loader2 size={20} className="animate-spin" /> Sending...</>
-                      : <><Send size={18} /> Send Inquiry</>
-                    }
-                  </button>
-                </form>
+                      <div className="flex flex-col gap-1.5">
+                        <label htmlFor="message" className="text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">Special Requirements</label>
+                        <textarea id="message" rows={4} value={form.message}
+                          onChange={e => setForm(p => ({...p, message: e.target.value}))}
+                          placeholder="Purity grade, packaging preference, delivery location, timeline..."
+                          className="w-full bg-gray-50 dark:bg-gray-800/60 border border-gray-200 dark:border-white/10 rounded-xl px-4 py-3 text-sm text-gray-900 dark:text-white placeholder-gray-400 outline-none transition-all duration-200 focus:ring-2 focus:ring-blue-500/40 focus:border-blue-500 resize-none"
+                        />
+                      </div>
+
+                      <button type="submit" disabled={status === "loading"}
+                        className="w-full flex items-center justify-center gap-2.5 py-4 rounded-2xl bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 text-white font-bold text-base transition-all duration-300 btn-glow disabled:opacity-70 disabled:cursor-not-allowed hover:scale-[1.02]">
+                        {status === "loading"
+                          ? <><Loader2 size={20} className="animate-spin" /> Sending...</>
+                          : <><Send size={18} /> Send Inquiry</>
+                        }
+                      </button>
+                    </form>
+                  )}
+                </>
               )}
             </div>
           </motion.div>

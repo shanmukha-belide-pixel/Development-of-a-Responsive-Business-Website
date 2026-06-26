@@ -19,14 +19,22 @@ export function Navbar() {
   const [scrolled, setScrolled]   = useState(false);
   const [menuOpen, setMenuOpen]   = useState(false);
   const [active, setActive]       = useState("Home");
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
 
   useEffect(() => {
+    setIsLoggedIn(localStorage.getItem("isLoggedIn") === "true");
     const onScroll = () => setScrolled(window.scrollY > 60);
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  const handleSignOut = () => {
+    localStorage.removeItem("isLoggedIn");
+    setIsLoggedIn(false);
+    window.location.reload();
+  };
 
   const handleNav = (label: string, href: string) => {
     setActive(label);
@@ -97,14 +105,25 @@ export function Navbar() {
 
             <div className="flex items-center gap-4">
               <ThemeToggle />
-              <Link
-                href="/login"
-                className={`hidden md:inline-block text-sm font-semibold transition-colors duration-300 ${
-                  scrolled ? "text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400" : "text-white/80 hover:text-white"
-                }`}
-              >
-                Sign In
-              </Link>
+              {isLoggedIn ? (
+                <button
+                  onClick={handleSignOut}
+                  className={`hidden md:inline-block text-sm font-semibold transition-colors duration-300 ${
+                    scrolled ? "text-gray-700 dark:text-gray-300 hover:text-red-500 dark:hover:text-red-400" : "text-white/80 hover:text-red-400"
+                  }`}
+                >
+                  Sign Out
+                </button>
+              ) : (
+                <Link
+                  href="/login"
+                  className={`hidden md:inline-block text-sm font-semibold transition-colors duration-300 ${
+                    scrolled ? "text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400" : "text-white/80 hover:text-white"
+                  }`}
+                >
+                  Sign In
+                </Link>
+              )}
               <button
                 onClick={() => handleNav("Contact","#contact")}
                 className="hidden md:flex items-center gap-2 px-5 py-2.5 rounded-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 text-white text-sm font-semibold transition-all duration-300 btn-glow hover:scale-105"
@@ -148,18 +167,30 @@ export function Navbar() {
                 {link.label}
               </motion.button>
             ))}
-            <motion.button
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: NAV_LINKS.length * 0.08 }}
-              onClick={() => {
-                setMenuOpen(false);
-                router.push("/login");
-              }}
-              className="text-3xl font-bold text-white/80 hover:text-blue-400 transition-colors"
-            >
-              Sign In
-            </motion.button>
+            {isLoggedIn ? (
+              <motion.button
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: NAV_LINKS.length * 0.08 }}
+                onClick={handleSignOut}
+                className="text-3xl font-bold text-red-400 hover:text-red-300 transition-colors"
+              >
+                Sign Out
+              </motion.button>
+            ) : (
+              <motion.button
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: NAV_LINKS.length * 0.08 }}
+                onClick={() => {
+                  setMenuOpen(false);
+                  router.push("/login");
+                }}
+                className="text-3xl font-bold text-white/80 hover:text-blue-400 transition-colors"
+              >
+                Sign In
+              </motion.button>
+            )}
             <motion.button
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
