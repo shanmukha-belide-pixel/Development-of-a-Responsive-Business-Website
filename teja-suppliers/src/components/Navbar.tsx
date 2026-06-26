@@ -5,6 +5,7 @@ import { Menu, X, FlaskConical } from "lucide-react";
 import { ThemeToggle } from "./ThemeToggle";
 import { motion, AnimatePresence } from "framer-motion";
 import { usePathname, useRouter } from "next/navigation";
+import { getAssetPath } from "@/utils/path";
 
 const NAV_LINKS = [
   { label: "Home",     href: "#hero" },
@@ -54,9 +55,11 @@ export function Navbar() {
           <div className="flex items-center justify-between h-16 md:h-20">
             {/* Logo */}
             <Link href="#hero" onClick={() => handleNav("Home","#hero")} className="flex items-center gap-3 group">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center shadow-lg shadow-blue-500/30 group-hover:scale-110 transition-transform duration-300">
-                <FlaskConical size={20} className="text-white" />
-              </div>
+              <img 
+                src={getAssetPath("/images/logo.png")} 
+                alt="Teja Suppliers logo" 
+                className="w-10 h-10 rounded-xl object-contain bg-white p-1 border border-gray-200 dark:border-white/10 shadow-lg shadow-blue-500/10 group-hover:scale-110 transition-transform duration-300"
+              />
               <div className="flex flex-col leading-none">
                 <span className={`font-sans font-800 text-base tracking-tight transition-colors duration-300 ${
                   scrolled ? "text-gray-900 dark:text-white" : "text-white"

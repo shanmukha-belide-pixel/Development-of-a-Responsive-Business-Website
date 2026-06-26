@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { FlaskConical, Phone, Mail, MapPin, MessageCircle } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
+import { getAssetPath } from "@/utils/path";
 
 const QUICK_LINKS = ["Home","About","Products","Why Us","Contact"];
 const PRODUCTS    = ["Industrial Solvents","Acids & Bases","Industrial Salts","AR/LR Reagents","HPLC Solvents","Specialty Chemicals"];
@@ -28,9 +29,11 @@ export function Footer() {
           {/* Brand */}
           <div>
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center shadow-lg shadow-blue-500/30">
-                <FlaskConical size={20} className="text-white" />
-              </div>
+              <img 
+                src={getAssetPath("/images/logo.png")} 
+                alt="Teja Suppliers logo" 
+                className="w-10 h-10 rounded-xl object-contain bg-white p-1 border border-white/10 shadow-lg shadow-blue-500/10"
+              />
               <div>
                 <div className="font-bold text-white text-base">Teja Suppliers</div>
                 <div className="text-[10px] text-blue-400 tracking-widest uppercase">Chemical Solutions</div>
