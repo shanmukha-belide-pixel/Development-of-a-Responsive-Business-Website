@@ -118,3 +118,11 @@
   0%,100% { transform: translateY(0); }
   50%     { transform: translateY(-12px); }
 }
+
+/* Hydration fallback to keep content visible if JS fails/is local */
+body.no-hydration *[style*="opacity:0"],
+body.no-hydration *[style*="opacity: 0"] {
+  opacity: 1 !important;
+  transform: none !important;
+  transition: none !important;
+}

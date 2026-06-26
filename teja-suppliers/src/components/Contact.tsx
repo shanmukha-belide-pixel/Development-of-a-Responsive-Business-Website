@@ -28,7 +28,7 @@ export function Contact() {
     const errs = validate();
     if (Object.keys(errs).length) { setErrors(errs); return; }
     
-    const accessKey = process.env.NEXT_PUBLIC_WEB3FORMS_KEY || "YOUR_WEB3FORMS_ACCESS_KEY_HERE";
+    const accessKey = process.env.NEXT_PUBLIC_WEB3FORMS_KEY || "f1a120e1-7718-47df-a6d2-b83203bb0763";
     if (accessKey === "YOUR_WEB3FORMS_ACCESS_KEY_HERE") {
       alert("Inquiry Form setup is incomplete!\n\nTo receive inquiries at your email in production, please register a free access key at https://web3forms.com and add it as NEXT_PUBLIC_WEB3FORMS_KEY in your .env file or project configurations.");
       return;

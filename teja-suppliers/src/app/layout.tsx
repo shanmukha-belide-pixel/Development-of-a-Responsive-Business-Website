@@ -45,7 +45,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${outfit.variable} ${jakarta.variable} font-body antialiased`}>
+      <body className={`${outfit.variable} ${jakarta.variable} font-body antialiased no-hydration`}>
         <ThemeProvider>{children}</ThemeProvider>
       </body>
     </html>
