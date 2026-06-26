@@ -60,33 +60,68 @@ export default function LoginPage() {
   useEffect(() => {
     setMounted(true);
 
-    const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
-    if (clientId && typeof window !== "undefined") {
-      let retries = 0;
-      const initGsi = () => {
-        const win = window as any;
-        if (win.google?.accounts?.id) {
-          try {
-            win.google.accounts.id.initialize({
-              client_id: clientId,
-              callback: handleGoogleCredentialResponse,
-            });
-            win.google.accounts.id.renderButton(
-              document.getElementById("btn-google-login-container"),
-              { theme: "outline", size: "large", width: 380 }
-            );
-            document.getElementById("btn-google-login")?.classList.add("hidden");
-            document.getElementById("btn-google-login-container-wrapper")?.classList.remove("hidden");
-          } catch (e) {
-            console.error("Failed to initialize Google Sign In SDK:", e);
-          }
-        } else if (retries < 30) {
-          retries++;
-          setTimeout(initGsi, 100);
+    // Fetch config.json dynamically at runtime
+    fetch(getAssetPath("/config.json"))
+      .then((res) => res.json())
+      .then((data) => {
+        const cid = data.googleClientId || process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
+        if (cid && typeof window !== "undefined") {
+          let retries = 0;
+          const initGsi = () => {
+            const win = window as any;
+            if (win.google?.accounts?.id) {
+              try {
+                win.google.accounts.id.initialize({
+                  client_id: cid,
+                  callback: handleGoogleCredentialResponse,
+                });
+                win.google.accounts.id.renderButton(
+                  document.getElementById("btn-google-login-container"),
+                  { theme: "outline", size: "large", width: 380 }
+                );
+                document.getElementById("btn-google-login")?.classList.add("hidden");
+                document.getElementById("btn-google-login-container-wrapper")?.classList.remove("hidden");
+              } catch (e) {
+                console.error("Failed to initialize Google Sign In SDK:", e);
+              }
+            } else if (retries < 30) {
+              retries++;
+              setTimeout(initGsi, 100);
+            }
+          };
+          initGsi();
         }
-      };
-      initGsi();
-    }
+      })
+      .catch((err) => {
+        console.warn("Could not load runtime config.json, using build environment client ID if any:", err);
+        const cid = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
+        if (cid && typeof window !== "undefined") {
+          let retries = 0;
+          const initGsi = () => {
+            const win = window as any;
+            if (win.google?.accounts?.id) {
+              try {
+                win.google.accounts.id.initialize({
+                  client_id: cid,
+                  callback: handleGoogleCredentialResponse,
+                });
+                win.google.accounts.id.renderButton(
+                  document.getElementById("btn-google-login-container"),
+                  { theme: "outline", size: "large", width: 380 }
+                );
+                document.getElementById("btn-google-login")?.classList.add("hidden");
+                document.getElementById("btn-google-login-container-wrapper")?.classList.remove("hidden");
+              } catch (e) {
+                console.error("Failed to initialize Google Sign In SDK:", e);
+              }
+            } else if (retries < 30) {
+              retries++;
+              setTimeout(initGsi, 100);
+            }
+          };
+          initGsi();
+        }
+      });
   }, []);
 
   const validate = () => {
