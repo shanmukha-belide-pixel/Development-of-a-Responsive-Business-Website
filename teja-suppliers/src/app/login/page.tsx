@@ -135,7 +135,7 @@ export default function LoginPage() {
                   href="#"
                   onClick={(e) => {
                     e.preventDefault();
-                    alert("Test credentials are:\nUsername: Shanmukha\nPassword: Shanmukha29*");
+                    alert("Please contact the administrator to reset your password.");
                   }}
                   className="text-xs font-semibold text-blue-600 dark:text-blue-400 hover:underline"
                 >
@@ -187,16 +187,7 @@ export default function LoginPage() {
               )}
             </button>
 
-            <div className="text-center text-xs text-gray-400 mt-4">
-              Demo Credentials:{" "}
-              <code className="bg-gray-100 dark:bg-gray-800/80 px-1.5 py-0.5 rounded text-blue-600 dark:text-blue-400 font-semibold select-all">
-                Shanmukha
-              </code>{" "}
-              /{" "}
-              <code className="bg-gray-100 dark:bg-gray-800/80 px-1.5 py-0.5 rounded text-blue-600 dark:text-blue-400 font-semibold select-all">
-                Shanmukha29*
-              </code>
-            </div>
+
           </form>
         )}
       </div>
