@@ -58,11 +58,15 @@ export function Navbar() {
                 <FlaskConical size={20} className="text-white" />
               </div>
               <div className="flex flex-col leading-none">
-                <span className="font-sans font-800 text-base text-gray-900 dark:text-white tracking-tight">Teja Suppliers</span>
+                <span className={`font-sans font-800 text-base tracking-tight transition-colors duration-300 ${
+                  scrolled ? "text-gray-900 dark:text-white" : "text-white"
+                }`}>
+                  Teja Suppliers
+                </span>
                 <span className="text-[10px] font-medium tracking-widest text-blue-500 uppercase">Chemical Solutions</span>
               </div>
             </Link>
-
+ 
             {/* Desktop Nav */}
             <ul className="hidden md:flex items-center gap-1">
               {NAV_LINKS.map((link) => (
@@ -71,12 +75,16 @@ export function Navbar() {
                     onClick={() => handleNav(link.label, link.href)}
                     className={`relative px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
                       active === link.label
-                        ? "text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-950/60"
-                        : "text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-950/40"
+                        ? scrolled
+                          ? "text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-950/60"
+                          : "text-white bg-white/15"
+                        : scrolled
+                        ? "text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-950/40"
+                        : "text-white/70 hover:text-white hover:bg-white/10"
                     }`}
                   >
                     {link.label}
-                    {active === link.label && (
+                    {active === link.label && scrolled && (
                       <motion.div layoutId="nav-pill" className="absolute inset-0 rounded-full bg-blue-100 dark:bg-blue-950/60 -z-10" />
                     )}
                   </button>
